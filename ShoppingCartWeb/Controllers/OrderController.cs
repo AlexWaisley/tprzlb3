@@ -13,6 +13,7 @@ namespace ShoppingCart.Web.Areas.Admin.Controllers
     public class OrderController : Controller
     {
         private IUnitOfWork _unitOfWork;
+
         public OrderController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -23,7 +24,8 @@ namespace ShoppingCart.Web.Areas.Admin.Controllers
             OrderVM orderVM = new OrderVM()
             {
                 OrderHeader = _unitOfWork.OrderHeader.GetT(x => x.Id == id, includeProperties: "ApplicationUser"),
-                OrderDetails = _unitOfWork.OrderDetail.GetAll(includeProperties: "Product").Where(x => x.OrderHeaderId == id)
+                OrderDetails = _unitOfWork.OrderDetail.GetAll(includeProperties: "Product")
+                    .Where(x => x.OrderHeaderId == id)
             };
 
             return orderVM;
@@ -69,6 +71,7 @@ namespace ShoppingCart.Web.Areas.Admin.Controllers
             {
                 _unitOfWork.OrderHeader.UpdateStatus(vm.OrderHeader.Id, OrderStatus.StatusCancelled);
             }
+
             _unitOfWork.Save();
         }
     }
